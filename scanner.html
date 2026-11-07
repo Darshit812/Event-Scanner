@@ -28,12 +28,13 @@ h2{margin:0;font-size:19px;font-weight:800}.d{opacity:.7}
 .Cash,.Online{background:#dcfce7;color:var(--ok)}.Pending{background:#ffedd5;color:var(--warn)}.Sponsor{background:#fef3c7;color:var(--vip)}
 .row{display:flex;gap:8px;margin-top:12px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .f{display:grid;gap:5px;margin-bottom:10px;color:var(--tx)}.f label{font-size:12px;color:var(--mut);font-weight:600}
-.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
-.svb{border:2px solid var(--line);background:#fff;border-radius:16px;padding:16px 8px;text-align:center;cursor:pointer;font:800 19px/1.2 Inter,system-ui,sans-serif;color:var(--tx)}.svb small{display:block;font-weight:600;font-size:13px;color:var(--mut);margin-top:4px}
-.svb.part{border-color:var(--warn);background:#fff7ed}.svb.done{background:var(--ok);border-color:var(--ok);color:#fff}.svb.done small{color:#dcfce7}
-.stp{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:center;margin:14px 0}.num{text-align:center;font-size:42px;font-weight:800}
-.err{background:#fee2e2;border:1px solid var(--bad);color:#7f1d1d;border-radius:12px;padding:10px 12px;margin:10px 0;display:flex;gap:10px;align-items:center;justify-content:space-between}
-.stay{display:flex;gap:8px;align-items:center;color:var(--mut);font-size:13px;margin:4px 0}.stay input{width:20px;height:20px;padding:0}
+.svr2{display:flex;align-items:center;justify-content:space-between;gap:10px;border:2px solid var(--line);background:#fff;border-radius:16px;padding:10px 12px;margin:8px 0}
+.svr2.sel{border-color:var(--ac);background:#eef2ff}.svr2.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.svn{flex:1;cursor:pointer;padding:4px 0}.svn b{display:block;font-size:20px;font-weight:800;line-height:1.2}.svn small{display:block;color:var(--mut);font-weight:600;font-size:13px}.svr2.done small{color:#dcfce7}
+.svs{display:flex;align-items:center;gap:8px}.svs button{width:46px;height:46px;border-radius:50%;border:2px solid var(--ac);background:#fff;color:var(--ac);font:800 26px/1 Inter,system-ui,sans-serif;cursor:pointer;padding:0}
+.svs .n,.svr2 .n{min-width:30px;text-align:center;font-size:26px;font-weight:800}
+.acts2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.acts2 .btn{padding:15px;font-size:17px;margin:0}
+.err small{display:block;opacity:.75;margin-top:2px}.err{background:#fee2e2;border:1px solid var(--bad);color:#7f1d1d;border-radius:12px;padding:10px 12px;margin:10px 0;display:flex;gap:10px;align-items:center;justify-content:space-between}
 .ov{position:fixed;inset:0;background:rgba(11,16,32,.72);display:none;align-items:flex-end;justify-content:center;z-index:9}.ov.on{display:flex}#md2{z-index:12}
 .sheet{background:#fff;color:var(--tx);width:100%;max-width:480px;max-height:94vh;overflow:auto;border-radius:22px 22px 0 0;padding:16px}
 .sheet .box{margin:0;padding:0;background:none;border:0}.sheet .box.okb,.sheet .box.badb{padding:12px;border-radius:16px}.sheet .box.okb{background:#dcfce7;border:2px solid var(--ok)}.sheet .box.badb{background:#fee2e2;border:2px solid var(--bad)}
@@ -42,7 +43,7 @@ h2{margin:0;font-size:19px;font-weight:800}.d{opacity:.7}
 </style></head>
 <body>
 <div id="app"><div class="sc"><div class="d" style="padding-top:30vh;text-align:center">Loading...</div></div></div>
-<div class="ov" id="md"></div><div class="ov" id="md2"></div><div id="toast"></div>
+<div class="ov" id="md"></div><div id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 <script>
 var P=new URLSearchParams(location.search),U=P.get('u'),E=P.get('e'),T=P.get('t');
@@ -50,11 +51,12 @@ var $=function(s){return document.querySelector(s)};
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var fd=function(s){var m=String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})/);return m?m[3]+'-'+m[2]+'-'+m[1]:(s||'')};
 var ft=function(s){var m=String(s||'').match(/^(\d{1,2}):(\d{2})/);if(!m)return s||'';var h=+m[1],a=h>=12?'PM':'AM';h=h%12||12;return h+':'+m[2]+' '+a};
-var busy=false,cur=null,tk=false,stp=null,req=null,saving=false,addRid=null;
+var busy=false,cur=null,tk=false,sel={},req=null,saving=false,addRid=null;
 var rid=function(){return Math.random().toString(36).slice(2,12)+Date.now().toString(36)};
 function toast(m){var t=$('#toast');t.textContent=m;t.style.display='block';setTimeout(function(){t.style.display='none'},2800)}
 function setRes(h){$('#res').innerHTML=h}
-function stay(){try{return localStorage.getItem('stay')==='1'}catch(e){return false}}
+function lastSid(){try{return localStorage.getItem('last')||''}catch(e){return ''}}
+function setLast(v){try{localStorage.setItem('last',v)}catch(e){}}
 
 /* ---- talking to the server: normal request first, script-tag (JSONP) as a fallback ---- */
 function jsonp(params){
@@ -69,12 +71,14 @@ function jsonp(params){
   });
 }
 async function api(name,o){
-  var params=Object.assign({api:name,e:E,t:T},o||{}),j;
+  var params=Object.assign({api:name,e:E,t:T},o||{}),j,m1='',m2='';
   try{
     var r=await fetch(U+'?'+new URLSearchParams(Object.assign({_:Date.now()},params)).toString());
-    j=await r.json();
+    var tx=await r.text();
+    try{j=JSON.parse(tx)}catch(x){throw new Error('reply was not JSON (HTTP '+r.status+'): '+tx.replace(/\s+/g,' ').slice(0,90))}
   }catch(e1){
-    try{j=await jsonp(params)}catch(e2){var er=new Error('Could not reach the server. Check the internet connection and tap Retry.');er.net=true;throw er}
+    m1=e1&&e1.message||String(e1);
+    try{j=await jsonp(params)}catch(e2){m2=e2&&e2.message||String(e2);var er=new Error('Could not reach the server. Check the internet connection and tap Retry.');er.net=true;er.detail='fetch: '+m1+' | script: '+m2;throw er}
   }
   if(!j.ok)throw new Error(j.error||'Error');
   return j.d;
@@ -83,7 +87,7 @@ async function api(name,o){
 /* ---- popup (member details) ---- */
 function pause(on){var c=$('#cam');if(c)c.classList.toggle('paused',!!on)}
 function pop(h){$('#md').innerHTML='<div class="sheet">'+h+'</div>';$('#md').classList.add('on');pause(true)}
-function resume(){$('#md').classList.remove('on');$('#md2').classList.remove('on');pause(false);busy=false;cur=null;req=null;saving=false;setRes('<div class="box">Point the camera at the pass QR code.</div>')}
+function resume(){$('#md').classList.remove('on');pause(false);busy=false;cur=null;req=null;saving=false;setRes('<div class="box">Point the camera at the pass QR code.</div>')}
 function nextBtn(t){return '<button class="btn big" data-a="next">'+(t||'Scan next')+'</button>'}
 function popMsg(h){pop('<div class="box badb">'+h+'</div>'+nextBtn())}
 
@@ -126,49 +130,67 @@ function onCode(data){
 }
 
 /* ---- member popup with counters ---- */
+function openLeft(s){return cur.qty-(cur.counts[s.id]||0)}
+function initSel(){
+  sel={};var open=cur.services.filter(function(s){return openLeft(s)>0});
+  var pick=open.length===1?open[0]:open.find(function(s){return s.id===lastSid()});
+  if(pick)sel[pick.id]=openLeft(pick);
+}
 function card(mode,err){
-  var r=cur,sv=r.services,all=sv.every(function(s){return (r.counts[s.id]||0)>=r.qty});
+  var r=cur,sv=r.services,all=sv.every(function(s){return openLeft(s)<=0});
   var head=mode==='dup'?'<div class="dup">Already used</div>':mode==='saved'?'<div class="ver">Saved</div>':all?'<div class="ver">All done</div>':'';
+  var rows=sv.map(function(s){
+    var u=r.counts[s.id]||0,left=r.qty-u,id=esc(s.id);
+    if(left<=0)return '<div class="svr2 done"><div class="svn"><b>'+esc(s.name)+'</b><small>Done '+u+'/'+r.qty+'</small></div><div class="n">&#10003;</div></div>';
+    var n=sel[s.id]||0;
+    return '<div class="svr2'+(n?' sel':'')+'" id="rw-'+id+'"><div class="svn" data-a="row" data-i="'+id+'"><b>'+esc(s.name)+'</b><small>'+u+'/'+r.qty+' done</small></div><div class="svs"><button data-a="mi" data-i="'+id+'">-</button><span class="n" id="n-'+id+'">'+n+'</span><button data-a="pl" data-i="'+id+'">+</button></div></div>';
+  }).join('');
+  var foot=(mode==='dup'||mode==='saved'||all)?nextBtn():'<div class="acts2"><button class="btn" data-a="next">Cancel</button><button class="btn ok" id="okb" data-a="ok">Confirm</button></div>';
   pop('<div class="box'+(mode==='dup'?' badb':(mode==='saved'||all)?' okb':'')+'">'+head
    +'<h2>'+esc(r.name)+(r.pay==='Sponsor'?' <span class="tg Sponsor">VIP</span>':'')+'</h2>'+r.qty+' pass'+(r.qty>1?'es':'')+' | <span class="tg '+esc(r.pay)+'">'+esc(r.pay)+'</span>'+(r.remarks?'<div class="sub">Note: '+esc(r.remarks)+'</div>':'')
-   +'<div class="sg">'+sv.map(function(s){var u=r.counts[s.id]||0,st=u>=r.qty?'done':u>0?'part':'';return '<button class="svb '+st+'" data-a="svc" data-i="'+esc(s.id)+'">'+esc(s.name)+'<small>'+(st==='done'?'Done '+u+'/'+r.qty:u+'/'+r.qty)+'</small></button>'}).join('')+'</div>'
-   +(err?'<div class="err"><span>'+esc(err.msg)+'</span>'+(err.retry?'<button class="btn s" data-a="retry">Retry</button>':'')+'</div>':'')
-   +(r.pay==='Pending'?'<div class="f"><label>Payment received</label><select id="cp"><option>Pending</option><option>Cash</option><option>Online</option></select></div>':'')
-   +'<div class="f"><label>Remarks</label><input id="cr" placeholder="e.g. Remaining 2 members coming later"></div>'
-   +'<label class="stay"><input type="checkbox" id="sy" '+(stay()?'checked':'')+'> Keep this open to mark more counters</label>'
-   +nextBtn(mode==='saved'?'Scan next':'Cancel')+'</div>');
+   +rows
+   +(err?'<div class="err"><span>'+esc(err.msg)+(err.detail?'<small>'+esc(err.detail)+'</small>':'')+'</span>'+(err.retry?'<button class="btn s" data-a="retry">Retry</button>':'')+'</div>':'')
+   +(mode!=='saved'&&mode!=='dup'&&r.pay==='Pending'?'<div class="f"><label>Payment received</label><select id="cp"><option>Pending</option><option>Cash</option><option>Online</option></select></div>':'')
+   +(mode!=='saved'&&mode!=='dup'&&!all?'<div class="f"><label>Remarks</label><input id="cr" placeholder="e.g. Remaining 2 members coming later"></div>':'')
+   +foot+'</div>');
+}
+function setN(sid,n){
+  var s=cur.services.find(function(z){return z.id===sid});if(!s)return;
+  n=Math.max(0,Math.min(openLeft(s),n));sel[sid]=n;
+  var el=$('#n-'+sid),row=$('#rw-'+sid);if(el)el.textContent=n;if(row)row.classList.toggle('sel',n>0);
 }
 async function look(pid){
   if(!pid)return;busy=true;pause(true);setRes('<div class="box">Checking pass...</div>');
   try{
     var r=await api('scanLookup',{pid:pid});
     if(!r.services)r.services=[{id:'entry',name:'Entry'}];if(!r.counts)r.counts={entry:r.entered||0};cur=r;
-    card(r.services.every(function(s){return (r.counts[s.id]||0)>=r.qty})?'dup':'');
+    var all=r.services.every(function(s){return openLeft(s)<=0});
+    if(!all)initSel();card(all?'dup':'');
   }catch(e){popMsg(esc(e.message))}
 }
-function svcTap(sid){
-  var r=cur,left=r.qty-(r.counts[sid]||0);
-  if(saving)return;
-  if(left<=0)return toast('Already done');
-  if(left===1)return svcGo(sid,1);
-  stp={sid:sid,n:left,max:left};
-  var s=r.services.find(function(z){return z.id===sid});
-  $('#md2').innerHTML='<div class="sheet"><h3>'+esc(s.name)+'</h3><div class="sub">How many people now? (up to '+left+')</div><div class="stp"><button class="btn big" data-a="dec" style="margin:0">-</button><div id="stn" class="num">'+left+'</div><button class="btn big" data-a="inc" style="margin:0">+</button></div><div class="acts"><button class="btn" data-a="close2">Cancel</button><button class="btn ok" data-a="stpok">Confirm</button></div></div>';
-  $('#md2').classList.add('on');
+function finish(d){
+  saving=false;req=null;cur.counts=d.counts;cur.pay=d.pay;cur.remarks=d.remarks;
+  var ids=Object.keys(d.applied||{});if(ids.length===1)setLast(ids[0]);
+  sel={};if(navigator.vibrate)navigator.vibrate(100);card('saved');
+  setTimeout(function(){if(cur&&$('#md').classList.contains('on'))resume()},900);
 }
-async function svcGo(sid,n,again){
+async function confirmSave(again){
   if(saving)return;
-  var pay=$('#cp')?$('#cp').value:'',rm=$('#cr')?$('#cr').value.trim():'';
-  if(!again)req={sid:sid,n:n,rid:rid(),pay:pay==='Pending'?'':pay,rm:rm};
-  saving=true;
+  if(!again){
+    var items=Object.keys(sel).filter(function(k){return sel[k]>0}).map(function(k){return k+':'+sel[k]}).join(',');
+    if(!items)return toast('Select at least one counter first');
+    var pay=$('#cp')?$('#cp').value:'',rm=$('#cr')?$('#cr').value.trim():'';
+    req={items:items,rid:rid(),pay:pay==='Pending'?'':pay,rm:rm};
+  }
+  saving=true;var b=$('#okb');if(b){b.disabled=true;b.textContent='Saving...'}
   try{
-    var d=await api('useSvc',{pid:cur.id,sid:req.sid,n:req.n,remarks:req.rm,pay:req.pay,rid:req.rid});
-    saving=false;req=null;cur.counts=d.counts;cur.pay=d.pay;cur.remarks=d.remarks;if(navigator.vibrate)navigator.vibrate(100);
-    card('saved');
-    if(!stay())setTimeout(function(){if(cur&&$('#md').classList.contains('on'))resume()},900);
+    finish(await api('useSvcs',{pid:cur.id,items:req.items,remarks:req.rm,pay:req.pay,rid:req.rid}));
   }catch(e){
+    if(e.net){ // the save may have worked even though the reply was lost: ask the server what happened
+      try{var d2=await api('res',{q:req.rid});if(d2){finish(d2);return}}catch(x){}
+    }
     saving=false;if(!e.net)req=null;
-    card('',{msg:e.message,retry:!!e.net});
+    card('',{msg:e.message,detail:e.detail,retry:!!e.net});
   }
 }
 
@@ -185,26 +207,24 @@ async function saveAdd(){
   var o={name:$('#sn').value.trim(),mobile:$('#sm').value.trim(),qty:$('#sq').value,pay:$('#sp').value,remarks:$('#sk').value.trim(),rid:addRid};
   if(!o.name||!o.mobile)return toast('Name and mobile are required');
   var b=$('#ss');b.disabled=true;
-  try{var pid=await api('scanAdd',o);look(pid)}catch(e){toast(e.message);b.disabled=false}
+  try{var pid=await api('scanAdd',o);look(pid)}
+  catch(e){
+    if(e.net){try{var p2=await api('res',{q:addRid});if(p2){look(p2);return}}catch(x){}}
+    toast(e.message);b.disabled=false;
+  }
 }
 
 var A={
   next:resume,close:resume,
   look:function(){var v=$('#mp').value.trim().toUpperCase();if(v){busy=true;look(v)}},
-  svc:function(i){svcTap(i)},retry:function(){if(req)svcGo(req.sid,req.n,true)},
-  dec:function(){if(stp.n>1){stp.n--;$('#stn').textContent=stp.n}},
-  inc:function(){if(stp.n<stp.max){stp.n++;$('#stn').textContent=stp.n}},
-  stpok:function(){var p=stp;$('#md2').classList.remove('on');svcGo(p.sid,p.n)},
-  close2:function(){$('#md2').classList.remove('on')},
+  row:function(i){var s=cur.services.find(function(z){return z.id===i});if(s)setN(i,(sel[i]||0)>0?0:openLeft(s))},
+  mi:function(i){setN(i,(sel[i]||0)-1)},pl:function(i){setN(i,(sel[i]||0)+1)},
+  ok:function(){confirmSave(false)},retry:function(){if(req)confirmSave(true)},
   add:addForm,save:saveAdd,cam:cam
 };
 document.addEventListener('click',function(e){
   if(e.target.id==='md')return resume();
-  if(e.target.id==='md2')return A.close2();
   var b=e.target.closest('[data-a]');if(b&&A[b.dataset.a])A[b.dataset.a](b.dataset.i);
-});
-document.addEventListener('change',function(e){
-  if(e.target.id==='sy'){try{localStorage.setItem('stay',e.target.checked?'1':'0')}catch(x){}}
 });
 start();
 </script></body></html>
