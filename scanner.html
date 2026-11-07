@@ -11,12 +11,13 @@ input,select{width:100%;border:1px solid var(--line);background:#fff;color:var(-
 .sc{max-width:480px;margin:auto;padding:14px;min-height:100vh}
 .hd{display:flex;align-items:center;gap:10px;margin-bottom:12px}.hd img{height:44px;max-width:96px;object-fit:contain;border-radius:8px;background:#fff;padding:3px}
 h2{margin:0;font-size:19px;font-weight:800}.d{opacity:.7}
-.cam{position:relative;border-radius:22px;overflow:hidden;background:#000}video{width:100%;height:44vh;object-fit:cover;display:block}
+.cam{position:relative;border-radius:22px;overflow:hidden;background:#000}video{width:100%;height:44vh;object-fit:cover;display:block;transition:opacity .2s}
 .fr{position:absolute;inset:14%;pointer-events:none}.fr i{position:absolute;width:30px;height:30px;border:4px solid #a5b4fc}
 .fr i:nth-child(1){top:0;left:0;border-right:0;border-bottom:0;border-radius:12px 0 0 0}.fr i:nth-child(2){top:0;right:0;border-left:0;border-bottom:0;border-radius:0 12px 0 0}
 .fr i:nth-child(3){bottom:0;left:0;border-right:0;border-top:0;border-radius:0 0 0 12px}.fr i:nth-child(4){bottom:0;right:0;border-left:0;border-top:0;border-radius:0 0 12px 0}
 .ln{position:absolute;left:14%;right:14%;height:2px;background:#818cf8;box-shadow:0 0 14px #818cf8;animation:sw 2.2s ease-in-out infinite}
 @keyframes sw{0%,100%{top:16%}50%{top:82%}}
+.cam.paused video{opacity:.25}.cam.paused .ln,.cam.paused .fr{display:none}
 .box{margin-top:12px;border-radius:18px;padding:14px;background:#fff;color:var(--tx)}.box h2{font-size:20px}.sub{color:var(--mut);font-size:12.5px}
 .okb{background:#dcfce7;border:2px solid var(--ok)}.badb{background:#fee2e2;border:2px solid var(--bad)}
 .ver{font-size:24px;font-weight:800;color:var(--ok)}.dup{font-size:24px;font-weight:800;color:var(--bad)}
@@ -25,20 +26,23 @@ h2{margin:0;font-size:19px;font-weight:800}.d{opacity:.7}
 .btn.big{width:100%;padding:14px;font-size:16px;margin-top:10px}.btn.s{padding:6px 10px;font-size:13px}.btn:disabled{opacity:.6}
 .tg{padding:1px 8px;border-radius:99px;font-size:11.5px;font-weight:700}
 .Cash,.Online{background:#dcfce7;color:var(--ok)}.Pending{background:#ffedd5;color:var(--warn)}.Sponsor{background:#fef3c7;color:var(--vip)}
+.row{display:flex;gap:8px;margin-top:12px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.f{display:grid;gap:5px;margin-bottom:10px;color:var(--tx)}.f label{font-size:12px;color:var(--mut);font-weight:600}
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 .svb{border:2px solid var(--line);background:#fff;border-radius:16px;padding:16px 8px;text-align:center;cursor:pointer;font:800 19px/1.2 Inter,system-ui,sans-serif;color:var(--tx)}.svb small{display:block;font-weight:600;font-size:13px;color:var(--mut);margin-top:4px}
 .svb.part{border-color:var(--warn);background:#fff7ed}.svb.done{background:var(--ok);border-color:var(--ok);color:#fff}.svb.done small{color:#dcfce7}
 .stp{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:center;margin:14px 0}.num{text-align:center;font-size:42px;font-weight:800}
-.row{display:flex;gap:8px;margin-top:12px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.f{display:grid;gap:5px;margin-bottom:10px;color:var(--tx)}.f label{font-size:12px;color:var(--mut);font-weight:600}
-#md{position:fixed;inset:0;background:rgba(16,24,40,.6);display:none;align-items:flex-end;justify-content:center;z-index:9}
-#md.on{display:flex}.sheet{background:#fff;color:var(--tx);width:100%;max-width:460px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:16px}
+.err{background:#fee2e2;border:1px solid var(--bad);color:#7f1d1d;border-radius:12px;padding:10px 12px;margin:10px 0;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.stay{display:flex;gap:8px;align-items:center;color:var(--mut);font-size:13px;margin:4px 0}.stay input{width:20px;height:20px;padding:0}
+.ov{position:fixed;inset:0;background:rgba(11,16,32,.72);display:none;align-items:flex-end;justify-content:center;z-index:9}.ov.on{display:flex}#md2{z-index:12}
+.sheet{background:#fff;color:var(--tx);width:100%;max-width:480px;max-height:94vh;overflow:auto;border-radius:22px 22px 0 0;padding:16px}
+.sheet .box{margin:0;padding:0;background:none;border:0}.sheet .box.okb,.sheet .box.badb{padding:12px;border-radius:16px}.sheet .box.okb{background:#dcfce7;border:2px solid var(--ok)}.sheet .box.badb{background:#fee2e2;border:2px solid var(--bad)}
 .sheet h3{margin:0 0 12px;font-size:18px;font-weight:800}.acts{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
-#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#fff;color:var(--tx);padding:9px 16px;border-radius:99px;display:none;z-index:10;max-width:90%}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#fff;color:var(--tx);padding:9px 16px;border-radius:99px;display:none;z-index:20;max-width:90%}
 </style></head>
 <body>
 <div id="app"><div class="sc"><div class="d" style="padding-top:30vh;text-align:center">Loading...</div></div></div>
-<div id="md"></div><div id="toast"></div>
+<div class="ov" id="md"></div><div class="ov" id="md2"></div><div id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 <script>
 var P=new URLSearchParams(location.search),U=P.get('u'),E=P.get('e'),T=P.get('t');
@@ -46,17 +50,43 @@ var $=function(s){return document.querySelector(s)};
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var fd=function(s){var m=String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})/);return m?m[3]+'-'+m[2]+'-'+m[1]:(s||'')};
 var ft=function(s){var m=String(s||'').match(/^(\d{1,2}):(\d{2})/);if(!m)return s||'';var h=+m[1],a=h>=12?'PM':'AM';h=h%12||12;return h+':'+m[2]+' '+a};
-var busy=false,cur=null,tk=false,stp=null;
+var busy=false,cur=null,tk=false,stp=null,req=null,saving=false,addRid=null;
+var rid=function(){return Math.random().toString(36).slice(2,12)+Date.now().toString(36)};
 function toast(m){var t=$('#toast');t.textContent=m;t.style.display='block';setTimeout(function(){t.style.display='none'},2800)}
 function setRes(h){$('#res').innerHTML=h}
-function nextBtn(t){return '<button class="btn big" data-a="next">'+(t||'Scan next')+'</button>'}
+function stay(){try{return localStorage.getItem('stay')==='1'}catch(e){return false}}
+
+/* ---- talking to the server: normal request first, script-tag (JSONP) as a fallback ---- */
+function jsonp(params){
+  return new Promise(function(ok,no){
+    var cb='cb'+Math.random().toString(36).slice(2),s=document.createElement('script');
+    var t=setTimeout(function(){end();no(new Error('timeout'))},25000);
+    function end(){clearTimeout(t);try{delete window[cb]}catch(e){window[cb]=undefined}if(s.parentNode)s.parentNode.removeChild(s)}
+    window[cb]=function(j){end();ok(j)};
+    s.onerror=function(){end();no(new Error('script failed'))};
+    s.src=U+'?'+new URLSearchParams(Object.assign({callback:cb,_:Date.now()},params)).toString();
+    document.head.appendChild(s);
+  });
+}
 async function api(name,o){
-  var q=new URLSearchParams(Object.assign({api:name,e:E,t:T,_:Date.now()},o||{}));
-  var r=await fetch(U+'?'+q.toString()),j;
-  try{j=await r.json()}catch(x){throw new Error('Server did not answer. Check that the scanner link is correct.')}
+  var params=Object.assign({api:name,e:E,t:T},o||{}),j;
+  try{
+    var r=await fetch(U+'?'+new URLSearchParams(Object.assign({_:Date.now()},params)).toString());
+    j=await r.json();
+  }catch(e1){
+    try{j=await jsonp(params)}catch(e2){var er=new Error('Could not reach the server. Check the internet connection and tap Retry.');er.net=true;throw er}
+  }
   if(!j.ok)throw new Error(j.error||'Error');
   return j.d;
 }
+
+/* ---- popup (member details) ---- */
+function pause(on){var c=$('#cam');if(c)c.classList.toggle('paused',!!on)}
+function pop(h){$('#md').innerHTML='<div class="sheet">'+h+'</div>';$('#md').classList.add('on');pause(true)}
+function resume(){$('#md').classList.remove('on');$('#md2').classList.remove('on');pause(false);busy=false;cur=null;req=null;saving=false;setRes('<div class="box">Point the camera at the pass QR code.</div>')}
+function nextBtn(t){return '<button class="btn big" data-a="next">'+(t||'Scan next')+'</button>'}
+function popMsg(h){pop('<div class="box badb">'+h+'</div>'+nextBtn())}
+
 async function start(){
   if(!U||!E||!T){$('#app').innerHTML='<div class="sc"><div class="box badb">Invalid scanner link. Open it from the Links button in the admin dashboard.</div></div>';return}
   var d;
@@ -90,67 +120,91 @@ function tick(){
   requestAnimationFrame(tick);
 }
 function onCode(data){
-  var p=String(data).split('|');busy=true;
-  if(p[0]!==E||!p[1])setRes('<div class="box badb"><div class="dup">Wrong event</div>This pass belongs to a different event.'+nextBtn()+'</div>');
+  var p=String(data).split('|');busy=true;pause(true);if(navigator.vibrate)navigator.vibrate(60);
+  if(p[0]!==E||!p[1])popMsg('<div class="dup">Wrong event</div>This pass belongs to a different event.');
   else look(p[1]);
 }
-function card(mode){
+
+/* ---- member popup with counters ---- */
+function card(mode,err){
   var r=cur,sv=r.services,all=sv.every(function(s){return (r.counts[s.id]||0)>=r.qty});
-  setRes('<div class="box'+(mode==='dup'?' badb':all?' okb':'')+'">'+(mode==='dup'?'<div class="dup">Already used</div>':all?'<div class="ver">All done</div>':'')
+  var head=mode==='dup'?'<div class="dup">Already used</div>':mode==='saved'?'<div class="ver">Saved</div>':all?'<div class="ver">All done</div>':'';
+  pop('<div class="box'+(mode==='dup'?' badb':(mode==='saved'||all)?' okb':'')+'">'+head
    +'<h2>'+esc(r.name)+(r.pay==='Sponsor'?' <span class="tg Sponsor">VIP</span>':'')+'</h2>'+r.qty+' pass'+(r.qty>1?'es':'')+' | <span class="tg '+esc(r.pay)+'">'+esc(r.pay)+'</span>'+(r.remarks?'<div class="sub">Note: '+esc(r.remarks)+'</div>':'')
    +'<div class="sg">'+sv.map(function(s){var u=r.counts[s.id]||0,st=u>=r.qty?'done':u>0?'part':'';return '<button class="svb '+st+'" data-a="svc" data-i="'+esc(s.id)+'">'+esc(s.name)+'<small>'+(st==='done'?'Done '+u+'/'+r.qty:u+'/'+r.qty)+'</small></button>'}).join('')+'</div>'
+   +(err?'<div class="err"><span>'+esc(err.msg)+'</span>'+(err.retry?'<button class="btn s" data-a="retry">Retry</button>':'')+'</div>':'')
    +(r.pay==='Pending'?'<div class="f"><label>Payment received</label><select id="cp"><option>Pending</option><option>Cash</option><option>Online</option></select></div>':'')
-   +'<div class="f"><label>Remarks</label><input id="cr" placeholder="e.g. Remaining 2 members coming later"></div>'+nextBtn()+'</div>');
+   +'<div class="f"><label>Remarks</label><input id="cr" placeholder="e.g. Remaining 2 members coming later"></div>'
+   +'<label class="stay"><input type="checkbox" id="sy" '+(stay()?'checked':'')+'> Keep this open to mark more counters</label>'
+   +nextBtn(mode==='saved'?'Scan next':'Cancel')+'</div>');
 }
 async function look(pid){
-  if(!pid)return;busy=true;
+  if(!pid)return;busy=true;pause(true);setRes('<div class="box">Checking pass...</div>');
   try{
-    var r=await api('scanLookup',{pid:pid});if(!r.services)r.services=[{id:'entry',name:'Entry'}];if(!r.counts)r.counts={entry:r.entered||0};cur=r;
+    var r=await api('scanLookup',{pid:pid});
+    if(!r.services)r.services=[{id:'entry',name:'Entry'}];if(!r.counts)r.counts={entry:r.entered||0};cur=r;
     card(r.services.every(function(s){return (r.counts[s.id]||0)>=r.qty})?'dup':'');
-  }catch(e){setRes('<div class="box badb">'+esc(e.message)+nextBtn()+'</div>')}
+  }catch(e){popMsg(esc(e.message))}
 }
 function svcTap(sid){
   var r=cur,left=r.qty-(r.counts[sid]||0);
+  if(saving)return;
   if(left<=0)return toast('Already done');
   if(left===1)return svcGo(sid,1);
   stp={sid:sid,n:left,max:left};
   var s=r.services.find(function(z){return z.id===sid});
-  $('#md').innerHTML='<div class="sheet"><h3>'+esc(s.name)+'</h3><div class="sub">How many people now? (up to '+left+')</div><div class="stp"><button class="btn big" data-a="dec" style="margin:0">-</button><div id="stn" class="num">'+left+'</div><button class="btn big" data-a="inc" style="margin:0">+</button></div><div class="acts"><button class="btn" data-a="close">Cancel</button><button class="btn ok" data-a="stpok">Confirm</button></div></div>';
-  $('#md').classList.add('on');
+  $('#md2').innerHTML='<div class="sheet"><h3>'+esc(s.name)+'</h3><div class="sub">How many people now? (up to '+left+')</div><div class="stp"><button class="btn big" data-a="dec" style="margin:0">-</button><div id="stn" class="num">'+left+'</div><button class="btn big" data-a="inc" style="margin:0">+</button></div><div class="acts"><button class="btn" data-a="close2">Cancel</button><button class="btn ok" data-a="stpok">Confirm</button></div></div>';
+  $('#md2').classList.add('on');
 }
-async function svcGo(sid,n){
+async function svcGo(sid,n,again){
+  if(saving)return;
   var pay=$('#cp')?$('#cp').value:'',rm=$('#cr')?$('#cr').value.trim():'';
+  if(!again)req={sid:sid,n:n,rid:rid(),pay:pay==='Pending'?'':pay,rm:rm};
+  saving=true;
   try{
-    var d=await api('useSvc',{pid:cur.id,sid:sid,n:n,remarks:rm,pay:pay==='Pending'?'':pay});
-    cur.counts=d.counts;cur.pay=d.pay;cur.remarks=d.remarks;if(navigator.vibrate)navigator.vibrate(100);card('');
-  }catch(e){toast(e.message)}
+    var d=await api('useSvc',{pid:cur.id,sid:req.sid,n:req.n,remarks:req.rm,pay:req.pay,rid:req.rid});
+    saving=false;req=null;cur.counts=d.counts;cur.pay=d.pay;cur.remarks=d.remarks;if(navigator.vibrate)navigator.vibrate(100);
+    card('saved');
+    if(!stay())setTimeout(function(){if(cur&&$('#md').classList.contains('on'))resume()},900);
+  }catch(e){
+    saving=false;if(!e.net)req=null;
+    card('',{msg:e.message,retry:!!e.net});
+  }
 }
+
+/* ---- walk-in ---- */
 function addForm(){
+  addRid=rid();pause(true);
   $('#md').innerHTML='<div class="sheet"><h3>Walk-in registration</h3><div class="f"><label>Name</label><input id="sn"></div>'
    +'<div class="g2"><div class="f"><label>Mobile</label><input id="sm" type="tel"></div><div class="f"><label>Quantity</label><input id="sq" type="number" min="1" value="1"></div></div>'
    +'<div class="f"><label>Payment status</label><select id="sp"><option>Cash</option><option>Online</option><option>Pending</option><option>Sponsor</option></select></div>'
-   +'<div class="f"><label>Remarks</label><input id="sk"></div><div class="acts"><button class="btn" data-a="close">Cancel</button><button class="btn p" id="ss" data-a="save">Save and check in</button></div></div>';
+   +'<div class="f"><label>Remarks</label><input id="sk"></div><div class="acts"><button class="btn" data-a="close">Cancel</button><button class="btn p" id="ss" data-a="save">Save</button></div></div>';
   $('#md').classList.add('on');
 }
 async function saveAdd(){
-  var o={name:$('#sn').value.trim(),mobile:$('#sm').value.trim(),qty:$('#sq').value,pay:$('#sp').value,remarks:$('#sk').value.trim()};
+  var o={name:$('#sn').value.trim(),mobile:$('#sm').value.trim(),qty:$('#sq').value,pay:$('#sp').value,remarks:$('#sk').value.trim(),rid:addRid};
   if(!o.name||!o.mobile)return toast('Name and mobile are required');
   var b=$('#ss');b.disabled=true;
-  try{var pid=await api('scanAdd',o);$('#md').classList.remove('on');busy=true;look(pid)}catch(e){toast(e.message);b.disabled=false}
+  try{var pid=await api('scanAdd',o);look(pid)}catch(e){toast(e.message);b.disabled=false}
 }
+
 var A={
-  next:function(){busy=false;setRes('<div class="box">Point the camera at the pass QR code.</div>')},
-  look:function(){look($('#mp').value.trim().toUpperCase())},
-  svc:function(i){svcTap(i)},
+  next:resume,close:resume,
+  look:function(){var v=$('#mp').value.trim().toUpperCase();if(v){busy=true;look(v)}},
+  svc:function(i){svcTap(i)},retry:function(){if(req)svcGo(req.sid,req.n,true)},
   dec:function(){if(stp.n>1){stp.n--;$('#stn').textContent=stp.n}},
   inc:function(){if(stp.n<stp.max){stp.n++;$('#stn').textContent=stp.n}},
-  stpok:function(){var p=stp;A.close();svcGo(p.sid,p.n)},
-  add:addForm,save:saveAdd,cam:cam,
-  close:function(){$('#md').classList.remove('on')}
+  stpok:function(){var p=stp;$('#md2').classList.remove('on');svcGo(p.sid,p.n)},
+  close2:function(){$('#md2').classList.remove('on')},
+  add:addForm,save:saveAdd,cam:cam
 };
 document.addEventListener('click',function(e){
-  if(e.target.id==='md')return A.close();
+  if(e.target.id==='md')return resume();
+  if(e.target.id==='md2')return A.close2();
   var b=e.target.closest('[data-a]');if(b&&A[b.dataset.a])A[b.dataset.a](b.dataset.i);
+});
+document.addEventListener('change',function(e){
+  if(e.target.id==='sy'){try{localStorage.setItem('stay',e.target.checked?'1':'0')}catch(x){}}
 });
 start();
 </script></body></html>
